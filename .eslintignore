@@ -3,4 +3,9 @@ public/
 **/coverage/
 **/node_modules/
 **/*.min.js
+.cache
+package.json
+package-lock.json
+.eslintrc.js
+*rc.js
 *.config.js

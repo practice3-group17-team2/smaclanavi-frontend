@@ -4,75 +4,119 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    "plugin:react/recommended",
-    // 各プラグイン推奨共有設定
-    "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:import/typescript",
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'airbnb',
+    'airbnb/hooks',
+    'airbnb-typescript',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+    'plugin:import/typescript',
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "prettier",
+    'plugin:@typescript-eslint/recommended',
+    'plugin:@typescript-eslint/recommended-requiring-type-checking',
+    'prettier',
   ],
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2020,
-    project: "./tsconfig.eslint.json", // プロジェクトに対するコンパイル設定ファイルのパス
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    project: './tsconfig.eslint.json',
+    sourceType: 'module',
     tsconfigRootDir: __dirname,
   },
-  plugins: ["@typescript-eslint", "import", "jsx-a11y", "react", "react-hooks"],
-  root: true, // 親ディレクトリの設定ファイルを読み込まないように設定
+  plugins: [
+    'import',
+    'jsx-a11y',
+    'prefer-arrow',
+    'react',
+    'react-hooks',
+    '@typescript-eslint',
+  ],
+  root: true,
   rules: {
-    "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": ["error"],
-    // should be rewritten as `['error', { allowAsStatement: true }]` in ESLint 7 or later
-    // SEE: https://github.com/typescript-eslint/typescript-eslint/issues/1184
-    "@typescript-eslint/no-floating-promises": ["warn", { ignoreIIFE: true }],
-    "@typescript-eslint/no-misused-promises": "warn",
-    "no-void": ["error", { allowAsStatement: true }],
-    "@typescript-eslint/no-unused-vars": [
-      "error",
+    'react/no-array-index-key': 'off', // 今回は静的なサイトなので、keyにindexを使用することによる危険性はない筈
+
+    'import/prefer-default-export': 'off', // default exportよりnamed export派なので
+    'import/no-default-export': 'error', // default exportよりnamed export派なので
+    '@typescript-eslint/no-unused-expressions': [
+      'error',
+      { allowTernary: true },
+    ], // 返り値がvoidの三項演算子(judge?a:b)を許容する スタイリッシュに書けて好きなので
+    'padding-line-between-statements': [
+      'error',
       {
-        vars: "all",
-        args: "after-used",
-        argsIgnorePattern: "_",
+        blankLine: 'always',
+        prev: '*',
+        next: 'return',
+      },
+    ], // return文の前に空行を入れることを強制
+    '@typescript-eslint/no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        args: 'after-used',
+        argsIgnorePattern: '_',
         ignoreRestSiblings: false,
-        varsIgnorePattern: "_",
+        varsIgnorePattern: '_',
       },
-    ],
-    "import/extensions": [
-      "error",
-      "ignorePackages",
+    ], // "_"以外の名前の使用されていない変数を禁じる
+    'import/extensions': [
+      'error',
+      'ignorePackages',
       {
-        js: "never",
-        jsx: "never",
-        ts: "never",
-        tsx: "never",
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
       },
-    ],
-    "react/jsx-filename-extension": [
-      "error",
+    ], // インポート時にjs, jsx, ts, tsxのファイルであればファイル拡張子を省略する
+    'react/jsx-filename-extension': [
+      'error',
       {
-        extensions: [".jsx", ".tsx"],
+        extensions: ['.jsx', '.tsx'],
       },
-    ],
+    ], // JSX のファイル拡張子を制限する eslint-config-airbnb で .jsx のみに限定されているので、.tsx を追加
+    'react/jsx-props-no-spreading': [
+      'error',
+      {
+        html: 'enforce',
+        custom: 'enforce',
+        explicitSpread: 'ignore',
+      },
+    ], // props の記述にスプレッド構文を許さない eslint-config-airbnb にてすべて禁止されているが、<Foo {...{ bar, baz } /}> のように個々の props を明記する書き方のみ許容
+    'react/react-in-jsx-scope': 'off', // JSX 記述を使用する場合に react モジュールを React としてインポートすることを強制 新しい JSX 変換形式を用いる場合はインポートが不要になるためこの設定を無効化
+    'prefer-arrow/prefer-arrow-functions': [
+      'error',
+      {
+        disallowPrototype: true,
+        singleReturnOnly: false,
+        classPropertiesAllowed: false,
+      },
+    ], // 関数定義をアロー関数式に統一
+    'react/function-component-definition': [
+      'error',
+      {
+        namedComponents: 'arrow-function',
+        unnamedComponents: 'arrow-function',
+      },
+    ], // 通常の関数だろうが無名関数だろうが、関数定義をfunction (props){...}ではなく、(props)=>{...}に統一する
   },
   overrides: [
     {
-      files: ["*.tsx"],
+      files: ['*.tsx'],
       rules: {
-        "react/prop-types": "off",
+        'react/prop-types': 'off', // コンポーネントの props に型チェックを行うための propTypes プロパティ19の定義を強制するルール。eslint-config-airbnb で設定されているが、TypeScript の場合は不要なのでファイル拡張子が .tsx の場合に無効化するよう設定を上書き
+        'react/require-default-props': 'off', // ts+関数コンポーネントなので、default propsの警告は不要だし、デフォルト引数で書くと怒られるので
       },
     },
   ],
   settings: {
-    "import/resolver": {
+    'import/resolver': {
       node: {
-        paths: ["src"],
+        paths: ['src'],
       },
     },
   },
