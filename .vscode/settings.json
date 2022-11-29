@@ -1,4 +1,3 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode", // フォーマッターをPrettierにする
-  "editor.formatOnSave": true // ファイル保存時にフォーマットを実行
+  "cSpell.words": ["smaclanavi"]
 }
