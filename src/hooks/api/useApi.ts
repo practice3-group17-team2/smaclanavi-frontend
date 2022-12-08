@@ -1,7 +1,7 @@
 import assert from 'assert';
 import { useQuery } from '@tanstack/react-query';
 
-export const useVenueApi = <
+export const useApi = <
   QueryParams extends Record<never, never>,
   Response extends Record<never, never>,
 >(
@@ -15,7 +15,7 @@ export const useVenueApi = <
 
   const fetcher = async () => {
     const query = new URLSearchParams(params).toString();
-    const url = `${API_ROOT}${path}${query ? `?${query}` : ''}`;
+    const url = `${API_ROOT}/${path}/${query ? `?${query}` : ''}/`;
 
     const response = await fetch(url, { method: 'GET' });
     assert(response.status === 200, response.status.toString());
